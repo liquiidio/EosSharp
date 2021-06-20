@@ -79,7 +79,7 @@ namespace EosSharp.Core.Providers
             {
                 {"int8",                 ReadByte               },
                 {"uint8",                ReadByte               },
-                {"int16",                ReadUint16             },
+                {"int16",                ReadInt16              },
                 {"uint16",               ReadUint16             },
                 {"int32",                ReadInt32              },
                 {"uint32",               ReadUint32             },
@@ -844,9 +844,16 @@ namespace EosSharp.Core.Providers
     #endregion
 
     #region Reader Functions
-    private object ReadByte(byte[] data, ref int readIndex)
+        private object ReadByte(byte[] data, ref int readIndex)
+            {
+                return data[readIndex++];
+            }
+
+        private object ReadInt16(byte[] data, ref int readIndex)
         {
-            return data[readIndex++];
+            var value = BitConverter.ToInt16(data, readIndex);
+            readIndex += 2;
+            return value;
         }
 
         private object ReadUint16(byte[] data, ref int readIndex)
