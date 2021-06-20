@@ -783,7 +783,9 @@ namespace EosSharp.Core.Providers
                         WriteAbiType(ms, fieldInfo.GetValue(value), field.type, abi, true);
                     else
                     {
-                        var propInfo = valueType.GetProperty(field.name);
+                        var propName = FindObjectPropertyName(field.name, valueType);
+
+                        var propInfo = valueType.GetProperty(propName);
 
                         if(propInfo != null)
                             WriteAbiType(ms, propInfo.GetValue(value), field.type, abi, true);
@@ -1503,6 +1505,24 @@ namespace EosSharp.Core.Providers
             name = SerializationHelper.PascalCaseToSnakeCase(name);
 
             if (objectType.GetFields().Any(p => p.Name == name))
+                return name;
+
+            return null;
+        }
+
+        private string FindObjectPropertyName(string name, Type objectType)
+        {
+            if (objectType.GetProperties().Any(p => p.Name == name))
+                return name;
+
+            name = SerializationHelper.SnakeCaseToPascalCase(name);
+
+            if (objectType.GetProperties().Any(p => p.Name == name))
+                return name;
+
+            name = SerializationHelper.PascalCaseToSnakeCase(name);
+
+            if (objectType.GetProperties().Any(p => p.Name == name))
                 return name;
 
             return null;
