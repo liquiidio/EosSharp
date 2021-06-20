@@ -977,39 +977,24 @@ namespace EosSharp.Core.Providers
             return value;
         }
 
+        private static readonly char[] Charmap = new[] { '.', '1', '2', '3', '4', '5', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+
         private object ReadName(byte[] data, ref int readIndex)
         {
-            byte[] a = data.Skip(readIndex).Take(8).ToArray();
-            string result = "";
+            var binary = BitConverter.ToUInt64(data.Skip(readIndex).Take(8).ToArray(),0);
 
-            readIndex += 8;
+            var str = new[] { '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.' };
 
-            for (int bit = 63; bit >= 0;)
+
+            var tmp = binary;
+            for (uint i = 0; i <= 12; ++i)
             {
-                int c = 0;
-                for (int i = 0; i < 5; ++i)
-                {
-                    if (bit >= 0)
-                    {
-                        c = (c << 1) | ((a[(int)Math.Floor((double)bit / 8)] >> (bit % 8)) & 1);
-                        --bit;
-                    }
-                }
-                if (c >= 6)
-                    result += (char)(c + 'a' - 6);
-                else if (c >= 1)
-                    result += (char)(c + '1' - 1);
-                else
-                    result += '.';
+                var c = Charmap[tmp & (ulong)(i == 0 ? 0x0f : 0x1f)];
+                str[(int)(12 - i)] = c;
+                tmp >>= (i == 0 ? 4 : 5);
             }
 
-            if (result == ".............")
-                return result;
-
-            while (result.EndsWith("."))
-                result = result.Substring(0, result.Length - 1);
-
-            return result;
+            return new string(str).TrimEnd('.');
         }
 
         private object ReadAsset(byte[] data, ref int readIndex)
