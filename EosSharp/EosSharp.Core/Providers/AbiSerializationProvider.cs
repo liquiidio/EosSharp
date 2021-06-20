@@ -81,7 +81,7 @@ namespace EosSharp.Core.Providers
                 {"uint8",                ReadByte               },
                 {"int16",                ReadUint16             },
                 {"uint16",               ReadUint16             },
-                {"int32",                ReadUint32             },
+                {"int32",                ReadInt32              },
                 {"uint32",               ReadUint32             },
                 {"int64",                ReadInt64              },
                 {"uint64",               ReadUint64             },
@@ -848,6 +848,13 @@ namespace EosSharp.Core.Providers
         {
             var value = BitConverter.ToUInt16(data, readIndex);
             readIndex += 2;
+            return value;
+        }
+
+        private object ReadInt32(byte[] data, ref int readIndex)
+        {
+            var value = BitConverter.ToInt32(data, readIndex);
+            readIndex += 4;
             return value;
         }
 
