@@ -1,4 +1,5 @@
-# This library is not actively maintained
+# ACTIVELY MAINTAINED Version of Eos-Sharp
+(originally developed by SCATTER)
 
 # eos-sharp
 C# client library for EOSIO blockchains. The library is based on https://github.com/EOSIO/eosjs and MIT licensed.
