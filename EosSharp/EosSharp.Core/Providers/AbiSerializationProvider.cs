@@ -43,7 +43,7 @@ namespace EosSharp.Core.Providers
             {     
                 {"int8",                 WriteByte               },
                 {"uint8",                WriteByte               },
-                {"int16",                WriteUint16             },
+                {"int16",                WriteInt16              },
                 {"uint16",               WriteUint16             },
                 {"int32",                WriteInt32              },
                 {"uint32",               WriteUint32             },
@@ -344,7 +344,12 @@ namespace EosSharp.Core.Providers
         {
             ms.Write(new byte[] { Convert.ToByte(value) }, 0, 1);
         }
-        
+
+        private static void WriteInt16(MemoryStream ms, object value)
+        {
+            ms.Write(BitConverter.GetBytes(Convert.ToInt16(value)), 0, 2);
+        }
+
         private static void WriteUint16(MemoryStream ms, object value)
         {
             ms.Write(BitConverter.GetBytes(Convert.ToUInt16(value)), 0, 2);
