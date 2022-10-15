@@ -51,5 +51,10 @@ namespace EosSharp.Core.Providers
             var signatures = await Task.WhenAll(signatureTasks);
             return signatures.SelectMany(k => k).Distinct();
         }
+
+        public Dictionary<string, string> Sign()
+        {
+            throw new NotSupportedException("Signing without parameters is not supported for this SignatureProvider");
+        }
     }
 }

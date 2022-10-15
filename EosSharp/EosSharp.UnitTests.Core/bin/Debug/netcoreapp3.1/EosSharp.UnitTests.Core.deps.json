@@ -1,0 +1,54 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "EosSharp.UnitTests.Core/1.0.0": {
+        "dependencies": {
+          "EosSharp.Core": "1.0.0"
+        },
+        "runtime": {
+          "EosSharp.UnitTests.Core.dll": {}
+        }
+      },
+      "Cryptography.ECDSA.Secp256K1/1.1.2": {
+        "runtime": {
+          "lib/netstandard2.0/Cryptography.ECDSA.dll": {
+            "assemblyVersion": "1.1.2.0",
+            "fileVersion": "1.1.2.0"
+          }
+        }
+      },
+      "EosSharp.Core/1.0.0": {
+        "dependencies": {
+          "Cryptography.ECDSA.Secp256K1": "1.1.2"
+        },
+        "runtime": {
+          "EosSharp.Core.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "EosSharp.UnitTests.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Cryptography.ECDSA.Secp256K1/1.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-y/RzJEiUBZ+IKzqacAozE7WW7pQ+btc3M+/f1fL8Mw37fsTntNHORoLBLqsC0FO5jWQ2b4yfY9gl/nysZasevg==",
+      "path": "cryptography.ecdsa.secp256k1/1.1.2",
+      "hashPath": "cryptography.ecdsa.secp256k1.1.1.2.nupkg.sha512"
+    },
+    "EosSharp.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

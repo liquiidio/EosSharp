@@ -13,11 +13,17 @@ using System.Threading.Tasks;
 
 namespace EosSharp.Core.Providers
 {
+    // TODO
+    public interface IAbiProvider
+    {
+        Task<Abi> GetAbi(string account);
+    }
+
     /// <summary>
     /// Serialize / deserialize transaction and fields using a Abi schema
     /// https://developers.eos.io/eosio-home/docs/the-abi
     /// </summary>
-    public class AbiSerializationProvider
+    public class AbiSerializationProvider : IAbiProvider
     {
         private enum KeyType
         {
@@ -35,7 +41,7 @@ namespace EosSharp.Core.Providers
         /// Construct abi serialization provided using EOS api
         /// </summary>
         /// <param name="api"></param>
-        public AbiSerializationProvider(EosApi api)
+        public AbiSerializationProvider(EosApi api = null)
         {
             this.Api = api;
 
@@ -275,6 +281,12 @@ namespace EosSharp.Core.Providers
             var data = SerializationHelper.HexStringToByteArray(dataHex);
             var abiStruct = abi.structs.First(s => s.name == structType);
             int readIndex = 0;
+            return ReadAbiStruct<TStructData>(data, abiStruct, abi, ref readIndex);
+        }
+
+        public TStructData DeserializeStructData<TStructData>(string structType, byte[] data, Abi abi, ref int readIndex)
+        {
+            var abiStruct = abi.structs.First(s => s.name == structType);
             return ReadAbiStruct<TStructData>(data, abiStruct, abi, ref readIndex);
         }
 
@@ -1528,5 +1540,15 @@ namespace EosSharp.Core.Providers
             return null;
         }
         #endregion
+
+        public byte[] SerializeStructData(object data, string typeName, Abi abi)
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] SerializeStructData(object data, AbiStruct structType, Abi abi)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

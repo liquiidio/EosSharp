@@ -116,5 +116,10 @@ namespace EosSharp.Core.Providers
                 return "SIG_K1_" + Base58.Encode(SerializationHelper.Combine(signAndChecksum));
             }));
         }
+
+        public Dictionary<string, string> Sign()
+        {
+            throw new NotSupportedException("Signing without parameters is not supported for this SignatureProvider");
+        }
     }
 }
