@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EosSharp.Core.Interfaces
@@ -24,17 +25,14 @@ namespace EosSharp.Core.Interfaces
         /// <returns>List of signatures per required keys</returns>
         Task<IEnumerable<string>> Sign(string chainId, IEnumerable<string> requiredKeys, byte[] signBytes, IEnumerable<string> abiNames = null);
 
-
-        // TODO
         /// <summary>
         /// Sign bytes using the signature provider
         /// </summary>
-        /// <param name="chainId">EOSIO Chain id</param>
-        /// <param name="requiredKeys">required public keys for signing this bytes</param>
+        /// <param name="key">key used for signing</param>
         /// <param name="signBytes">signature bytes</param>
-        /// <param name="abiNames">abi contract names to get abi information from</param>
         /// <returns>List of signatures per required keys</returns>
-        // TODO
-        Dictionary<string, string> Sign();
+        string Sign(string chainId, byte[] signBytes);
+
+        Dictionary<string, string> Sign(); /// TODO
     }
 }

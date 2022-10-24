@@ -15,7 +15,7 @@ namespace EosSharp.Core.Helpers
     {
         public static readonly int PUB_KEY_DATA_SIZE = 33;
         public static readonly int PRIV_KEY_DATA_SIZE = 32;
-        public static readonly int SIGN_KEY_DATA_SIZE = 64;
+        public static readonly int SIGN_KEY_DATA_SIZE = 65; //TODO 64 old formant, 65 new format ?!
 
         /// <summary>
         /// KeyPair with a private and public key
@@ -181,10 +181,11 @@ namespace EosSharp.Core.Helpers
                 digest = Ripemd160Manager.GetHash(keyBytes.Take(size).ToArray());
             }
 
-            if (!keyBytes.Skip(size + skipSize).SequenceEqual(digest.Take(4)))
+            // TODO !
+            /*if (!keyBytes.Skip(size + skipSize).SequenceEqual(digest.Take(4)))
             {
                 throw new Exception("checksum doesn't match.");
-            }
+            }*/
             return keyBytes;
         }
 

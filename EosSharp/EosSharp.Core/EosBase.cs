@@ -1,5 +1,4 @@
-﻿using EosSharp.Core;
-using EosSharp.Core.Api.v1;
+﻿using EosSharp.Core.Api.v1;
 using EosSharp.Core.Helpers;
 using EosSharp.Core.Interfaces;
 using EosSharp.Core.Providers;

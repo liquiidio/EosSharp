@@ -1,7 +1,6 @@
 ﻿using EosSharp.Core.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 
@@ -52,9 +51,14 @@ namespace EosSharp.Core.Providers
             return signatures.SelectMany(k => k).Distinct();
         }
 
+        public string Sign(string chainId, byte[] signBytes)
+        {
+            throw new NotImplementedException();
+        }
+
         public Dictionary<string, string> Sign()
         {
-            throw new NotSupportedException("Signing without parameters is not supported for this SignatureProvider");
+            throw new NotImplementedException();
         }
     }
 }

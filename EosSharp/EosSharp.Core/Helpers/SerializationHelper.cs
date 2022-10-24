@@ -385,26 +385,27 @@ namespace EosSharp.Core.Helpers
             return h.Substring(6, 2) + h.Substring(4, 2) + h.Substring(2, 2) + h.Substring(0, 2);
         }
 
-        private static readonly char[] CharMap = new[] { '.', '1', '2', '3', '4', '5', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+        private static readonly char[] Charmap = new[] { '.', '1', '2', '3', '4', '5', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
-        public static string ByteArrayToNameString(byte[] binary)
+        /// <summary>
+        /// Convert uint64_t into EOSIO name
+        /// </summary>
+        /// <param name="binary"></param>
+        /// <returns>EOSIO Name</returns>
+        public static string ConvertULongToName(ulong binary)
         {
             var str = new[] { '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.' };
 
-            var tmp = BitConverter.ToUInt64(binary);
+
+            var tmp = binary;
             for (uint i = 0; i <= 12; ++i)
             {
-                var c = CharMap[tmp & (ulong)(i == 0 ? 0x0f : 0x1f)];
+                var c = Charmap[tmp & (ulong)(i == 0 ? 0x0f : 0x1f)];
                 str[(int)(12 - i)] = c;
-                tmp >>= i == 0 ? 4 : 5;
+                tmp >>= (i == 0 ? 4 : 5);
             }
-
+            
             return new string(str).TrimEnd('.');
-        }
-
-        public static string ConvertULongToName(ulong ulongName)
-        {
-            return ByteArrayToNameString(BitConverter.GetBytes(ulongName));
         }
     }
 }

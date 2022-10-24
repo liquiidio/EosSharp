@@ -10,20 +10,28 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Action = EosSharp.Core.Api.v1.Action;
 
 namespace EosSharp.Core.Providers
 {
-    // TODO
-    public interface IAbiProvider
+    public interface IAbiSerializationProvider
     {
+        EosApi Api { get; set; }
         Task<Abi> GetAbi(string account);
+        T Deserialize<T>(byte[] rawVal, string abiSerializableType);
+        byte[] Serialize(object value, string abiSerializableType);
+        byte[] SerializeActionData(Action action, Abi abi);
+        T DeserializeStructData<T>(string signingRequestIdentityV3, byte[] array, Abi abi, ref int readIndex);
+        byte[] SerializeStructData(object data, AbiStruct type, Abi abi);
+        Dictionary<string, object> DeserializeStructData(string name, string hex_data, Abi abi);
+        byte[] SerializePackedTransaction(Transaction transaction, Dictionary<string, Abi> abis);
     }
 
     /// <summary>
     /// Serialize / deserialize transaction and fields using a Abi schema
     /// https://developers.eos.io/eosio-home/docs/the-abi
     /// </summary>
-    public class AbiSerializationProvider : IAbiProvider
+    public class AbiSerializationProvider : IAbiSerializationProvider
     {
         private enum KeyType
         {
@@ -33,7 +41,7 @@ namespace EosSharp.Core.Providers
 
         private delegate object ReaderDelegate(byte[] data, ref int readIndex);
 
-        private EosApi Api { get; set; }
+        public EosApi Api { get; set; }
         private Dictionary<string, Action<MemoryStream, object>> TypeWriters { get; set; }
         private Dictionary<string, ReaderDelegate> TypeReaders { get; set; }
 
@@ -41,12 +49,91 @@ namespace EosSharp.Core.Providers
         /// Construct abi serialization provided using EOS api
         /// </summary>
         /// <param name="api"></param>
-        public AbiSerializationProvider(EosApi api = null)
+        public AbiSerializationProvider(EosApi api)
         {
             this.Api = api;
 
             TypeWriters = new Dictionary<string, Action<MemoryStream, object>>()
-            {     
+            {
+                {"int8",                 WriteByte               },
+                {"uint8",                WriteByte               },
+                {"int16",                WriteInt16              },
+                {"uint16",               WriteUint16             },
+                {"int32",                WriteInt32              },
+                {"uint32",               WriteUint32             },
+                {"int64",                WriteInt64              },
+                {"uint64",               WriteUint64             },
+                {"int128",               WriteInt128             },
+                {"uint128",              WriteUInt128            },
+                {"varuint32",            WriteVarUint32          },
+                {"varint32",             WriteVarInt32           },
+                {"float32",              WriteFloat32            },
+                {"float64",              WriteFloat64            },
+                {"float128",             WriteFloat128           },
+                {"bytes",                WriteBytes              },
+                {"bool",                 WriteBool               },
+                {"string",               WriteString             },
+                {"name",                 WriteName               },
+                {"asset",                WriteAsset              },
+                {"time_point",           WriteTimePoint          },
+                {"time_point_sec",       WriteTimePointSec       },
+                {"block_timestamp_type", WriteBlockTimestampType },
+                {"symbol_code",          WriteSymbolCode         },
+                {"symbol",               WriteSymbolString       },
+                {"checksum160",          WriteChecksum160        },
+                {"checksum256",          WriteChecksum256        },
+                {"checksum512",          WriteChecksum512        },
+                {"public_key",           WritePublicKey          },
+                {"private_key",          WritePrivateKey         },
+                {"signature",            WriteSignature          },
+                {"extended_asset",       WriteExtendedAsset      }
+            };
+
+            TypeReaders = new Dictionary<string, ReaderDelegate>()
+            {
+                {"int8",                 ReadByte               },
+                {"uint8",                ReadByte               },
+                {"int16",                ReadInt16              },
+                {"uint16",               ReadUint16             },
+                {"int32",                ReadInt32              },
+                {"uint32",               ReadUint32             },
+                {"int64",                ReadInt64              },
+                {"uint64",               ReadUint64             },
+                {"int128",               ReadInt128             },
+                {"uint128",              ReadUInt128            },
+                {"varuint32",            ReadVarUint32          },
+                {"varint32",             ReadVarInt32           },
+                {"float32",              ReadFloat32            },
+                {"float64",              ReadFloat64            },
+                {"float128",             ReadFloat128           },
+                {"bytes",                ReadBytes              },
+                {"bool",                 ReadBool               },
+                {"string",               ReadString             },
+                {"name",                 ReadName               },
+                {"asset",                ReadAsset              },
+                {"time_point",           ReadTimePoint          },
+                {"time_point_sec",       ReadTimePointSec       },
+                {"block_timestamp_type", ReadBlockTimestampType },
+                {"symbol_code",          ReadSymbolCode         },
+                {"symbol",               ReadSymbolString       },
+                {"checksum160",          ReadChecksum160        },
+                {"checksum256",          ReadChecksum256        },
+                {"checksum512",          ReadChecksum512        },
+                {"public_key",           ReadPublicKey          },
+                {"private_key",          ReadPrivateKey         },
+                {"signature",            ReadSignature          },
+                {"extended_asset",       ReadExtendedAsset      }
+            };
+        }
+
+        /// <summary>
+        /// Construct abi serialization provided using EOS api
+        /// </summary>
+        /// <param name="api"></param>
+        public AbiSerializationProvider()
+        {
+            TypeWriters = new Dictionary<string, Action<MemoryStream, object>>()
+            {
                 {"int8",                 WriteByte               },
                 {"uint8",                WriteByte               },
                 {"int16",                WriteInt16              },
@@ -163,6 +250,49 @@ namespace EosSharp.Core.Providers
         }
 
         /// <summary>
+        /// Serialize transaction to packed asynchronously
+        /// </summary>
+        /// <param name="trx">transaction to pack</param>
+        /// <returns></returns>
+        public byte[] SerializePackedTransaction(Transaction trx, Dictionary<string, Abi> abiMap = null)
+        {
+            int actionIndex = 0;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                //trx headers
+                WriteUint32(ms, SerializationHelper.DateToTimePointSec(trx.expiration));
+                WriteUint16(ms, trx.ref_block_num);
+                WriteUint32(ms, trx.ref_block_prefix);
+
+                //trx info
+                WriteVarUint32(ms, trx.max_net_usage_words);
+                WriteByte(ms, trx.max_cpu_usage_ms);
+                WriteVarUint32(ms, trx.delay_sec);
+
+                WriteVarUint32(ms, (UInt32)trx.context_free_actions.Count);
+                foreach (var action in trx.context_free_actions)
+                {
+                    WriteAction(ms, action, abiMap[action.account]);
+                }
+
+                WriteVarUint32(ms, (UInt32)trx.actions.Count);
+                foreach (var action in trx.actions)
+                {
+                    WriteAction(ms, action, abiMap[action.account]);
+                }
+
+                WriteVarUint32(ms, (UInt32)trx.transaction_extensions.Count);
+                foreach (var extension in trx.transaction_extensions)
+                {
+                    WriteExtension(ms, extension);
+                }
+
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
         /// Deserialize packed transaction asynchronously
         /// </summary>
         /// <param name="packtrx">hex encoded strinh with packed transaction</param>
@@ -240,7 +370,7 @@ namespace EosSharp.Core.Providers
         public byte[] SerializeActionData(Core.Api.v1.Action action, Abi abi)
         {
             var abiAction = abi.actions.FirstOrDefault(aa => aa.name == action.name);
-            
+
             if (abiAction == null)
                 throw new ArgumentException(string.Format("action name {0} not found on abi.", action.name));
 
@@ -284,6 +414,31 @@ namespace EosSharp.Core.Providers
             return ReadAbiStruct<TStructData>(data, abiStruct, abi, ref readIndex);
         }
 
+        /// <summary>
+        /// Deserialize structure data with generic TStructData type
+        /// </summary>
+        /// <typeparam name="TStructData">deserialization struct data type</typeparam>
+        /// <param name="structType">struct type in abi</param>
+        /// <param name="dataHex">data to deserialize</param>
+        /// <param name="abi">abi schema to look for struct type</param>
+        /// <param name="readIndex"></param>
+        /// <returns></returns>
+        public TStructData DeserializeStructData<TStructData>(string structType, string dataHex, Abi abi, ref int readIndex)
+        {
+            var data = SerializationHelper.HexStringToByteArray(dataHex);
+            var abiStruct = abi.structs.First(s => s.name == structType);
+            return ReadAbiStruct<TStructData>(data, abiStruct, abi, ref readIndex);
+        }
+
+        /// <summary>
+        /// Deserialize structure data with generic TStructData type
+        /// </summary>
+        /// <typeparam name="TStructData">deserialization struct data type</typeparam>
+        /// <param name="structType">struct type in abi</param>
+        /// <param name="data">data to deserialize</param>
+        /// <param name="abi">abi schema to look for struct type</param>
+        /// <param name="readIndex"></param>
+        /// <returns></returns>
         public TStructData DeserializeStructData<TStructData>(string structType, byte[] data, Abi abi, ref int readIndex)
         {
             var abiStruct = abi.structs.First(s => s.name == structType);
@@ -347,6 +502,18 @@ namespace EosSharp.Core.Providers
         public T DeserializeType<T>(byte[] data)
         {
             int readIndex = 0;
+            return ReadType<T>(data, ref readIndex);
+        }
+
+        /// <summary>
+        /// Deserialize type by binary data, ref readIndex
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="readIndex"></param>
+        /// <returns></returns>
+        public T DeserializeType<T>(byte[] data, ref int readIndex)
+        {
             return ReadType<T>(data, ref readIndex);
         }
 
@@ -465,7 +632,7 @@ namespace EosSharp.Core.Providers
             var strBytes = Encoding.UTF8.GetBytes((string)value);
             WriteVarUint32(ms, (UInt32)strBytes.Length);
             if (strBytes.Length > 0)
-                ms.Write(strBytes, 0, strBytes.Length); 
+                ms.Write(strBytes, 0, strBytes.Length);
         }
 
         private static void WriteName(MemoryStream ms, object value)
@@ -593,7 +760,7 @@ namespace EosSharp.Core.Providers
 
             ms.Write(bytes, 0, bytes.Length);
         }
-        
+
         private static void WritePublicKey(MemoryStream ms, object value)
         {
             var s = (string)value;
@@ -615,7 +782,7 @@ namespace EosSharp.Core.Providers
         {
             var s = (string)value;
             var signBytes = CryptoHelper.SignStringToBytes(s);
-            
+
             if (s.StartsWith("SIG_K1_"))
                 WriteByte(ms, KeyType.k1);
             else if (s.StartsWith("SIG_R1_"))
@@ -679,7 +846,10 @@ namespace EosSharp.Core.Providers
                 WritePermissionLevel(ms, perm);
             }
 
-            WriteBytes(ms, SerializeActionData(action, abi));
+            if(action.data is byte[])
+                WriteBytes(ms, action.data);
+            else
+                WriteBytes(ms, SerializeActionData(action, abi));
         }
 
         private void WriteAbiType(MemoryStream ms, object value, string type, Abi abi, bool isBinaryExtensionAllowed)
@@ -687,7 +857,7 @@ namespace EosSharp.Core.Providers
             var uwtype = UnwrapTypeDef(abi, type);
 
             // binary extension type
-            if(uwtype.EndsWith("$"))
+            if (uwtype.EndsWith("$"))
             {
                 if (!isBinaryExtensionAllowed) throw new Exception("Binary Extension type not allowed.");
                 WriteAbiType(ms, value, uwtype.Substring(0, uwtype.Length - 1), abi, isBinaryExtensionAllowed);
@@ -698,7 +868,7 @@ namespace EosSharp.Core.Providers
             //optional type
             if (uwtype.EndsWith("?"))
             {
-                if(value != null)
+                if (value != null)
                 {
                     WriteByte(ms, 1);
                     type = uwtype.Substring(0, uwtype.Length - 1);
@@ -711,7 +881,7 @@ namespace EosSharp.Core.Providers
             }
 
             // array type
-            if(uwtype.EndsWith("[]"))
+            if (uwtype.EndsWith("[]"))
             {
                 var items = (ICollection)value;
                 var arrayType = uwtype.Substring(0, uwtype.Length - 2);
@@ -730,14 +900,14 @@ namespace EosSharp.Core.Providers
                 return;
             }
 
-            var abiStruct = abi.structs.FirstOrDefault(s => s.name == uwtype);
+            var abiStruct = abi.structs.FirstOrDefault(s => s.name == type);
             if (abiStruct != null)
             {
                 WriteAbiStruct(ms, value, abiStruct, abi);
                 return;
             }
 
-            var abiVariant = abi.variants.FirstOrDefault(v => v.name == uwtype);
+            var abiVariant = abi.variants.FirstOrDefault(v => v.name == type);
             if (abiVariant != null)
             {
                 WriteAbiVariant(ms, value, abiVariant, abi, isBinaryExtensionAllowed);
@@ -753,12 +923,12 @@ namespace EosSharp.Core.Providers
             if (value == null)
                 return;
 
-            if(!string.IsNullOrWhiteSpace(abiStruct.@base))
+            if (!string.IsNullOrWhiteSpace(abiStruct.@base))
             {
                 WriteAbiType(ms, value, abiStruct.@base, abi, true);
             }
 
-            if(value is System.Collections.IDictionary)
+            if (value is System.Collections.IDictionary)
             {
                 var skippedBinaryExtension = false;
                 var valueDict = value as System.Collections.IDictionary;
@@ -791,7 +961,7 @@ namespace EosSharp.Core.Providers
                 {
                     var fieldInfo = valueType.GetField(field.name);
 
-                    if(fieldInfo != null)
+                    if (fieldInfo != null)
                         WriteAbiType(ms, fieldInfo.GetValue(value), field.type, abi, true);
                     else
                     {
@@ -799,7 +969,7 @@ namespace EosSharp.Core.Providers
 
                         var propInfo = valueType.GetProperty(propName);
 
-                        if(propInfo != null)
+                        if (propInfo != null)
                             WriteAbiType(ms, propInfo.GetValue(value), field.type, abi, true);
                         else
                             throw new Exception("Missing " + abiStruct.name + "." + field.name + " (type=" + field.type + ")");
@@ -824,7 +994,7 @@ namespace EosSharp.Core.Providers
         private string UnwrapTypeDef(Abi abi, string type)
         {
             var wtype = abi.types.FirstOrDefault(t => t.new_type_name == type);
-            if(wtype != null && wtype.type != type)
+            if (wtype != null && wtype.type != type)
             {
                 return UnwrapTypeDef(abi, wtype.type);
             }
@@ -842,11 +1012,11 @@ namespace EosSharp.Core.Providers
 
             var abiTypeDef = abi.types.FirstOrDefault(t => t.new_type_name == type);
 
-            if(abiTypeDef != null)
+            if (abiTypeDef != null)
             {
                 var serializer = GetTypeSerializerAndCache(abiTypeDef.type, typeSerializers, abi);
 
-                if(serializer != null)
+                if (serializer != null)
                 {
                     typeSerializers.Add(type, serializer);
                     return serializer;
@@ -855,13 +1025,13 @@ namespace EosSharp.Core.Providers
 
             return default(TSerializer);
         }
-    #endregion
+        #endregion
 
-    #region Reader Functions
+        #region Reader Functions
         private object ReadByte(byte[] data, ref int readIndex)
-            {
-                return data[readIndex++];
-            }
+        {
+            return data[readIndex++];
+        }
 
         private object ReadInt16(byte[] data, ref int readIndex)
         {
@@ -939,9 +1109,9 @@ namespace EosSharp.Core.Providers
             var v = (UInt32)ReadVarUint32(data, ref readIndex);
 
             if ((v & 1) != 0)
-                return ((~v) >> 1) | 0x80000000;
+                return (Int32)(((~v) >> 1) | 0x80000000);
             else
-                return v >> 1;
+                return (Int32)(v >> 1);
         }
 
         private object ReadFloat32(byte[] data, ref int readIndex)
@@ -982,7 +1152,7 @@ namespace EosSharp.Core.Providers
         private object ReadString(byte[] data, ref int readIndex)
         {
             var size = Convert.ToInt32(ReadVarUint32(data, ref readIndex));
-            string value = null;
+            string value = "";
             if (size > 0)
             {
                 value = Encoding.UTF8.GetString(data.Skip(readIndex).Take(size).ToArray());
@@ -991,24 +1161,13 @@ namespace EosSharp.Core.Providers
             return value;
         }
 
-        private static readonly char[] Charmap = new[] { '.', '1', '2', '3', '4', '5', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-
         private object ReadName(byte[] data, ref int readIndex)
         {
-            var binary = BitConverter.ToUInt64(data.Skip(readIndex).Take(8).ToArray(),0);
+            var binary = BitConverter.ToUInt64(data.Skip(readIndex).Take(8).ToArray(), 0);
+            readIndex += 8;
 
-            var str = new[] { '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.' };
+            return SerializationHelper.ConvertULongToName(binary);
 
-
-            var tmp = binary;
-            for (uint i = 0; i <= 12; ++i)
-            {
-                var c = Charmap[tmp & (ulong)(i == 0 ? 0x0f : 0x1f)];
-                str[(int)(12 - i)] = c;
-                tmp >>= (i == 0 ? 4 : 5);
-            }
-
-            return new string(str).TrimEnd('.');
         }
 
         private object ReadAsset(byte[] data, ref int readIndex)
@@ -1096,7 +1255,7 @@ namespace EosSharp.Core.Providers
 
             readIndex += CryptoHelper.PUB_KEY_DATA_SIZE;
 
-            if(type == (int)KeyType.k1)
+            if (type == (int)KeyType.k1)
             {
                 return CryptoHelper.PubKeyBytesToString(keyBytes, "K1");
             }
@@ -1205,7 +1364,7 @@ namespace EosSharp.Core.Providers
             var size = Convert.ToInt32(ReadVarUint32(data, ref readIndex));
 
             action.authorization = new List<PermissionLevel>(size);
-            for (var i = 0; i < size ; i++)
+            for (var i = 0; i < size; i++)
             {
                 action.authorization.Add((PermissionLevel)ReadPermissionLevel(data, ref readIndex));
             }
@@ -1227,7 +1386,8 @@ namespace EosSharp.Core.Providers
 
             for (int i = 0; i < size; i++)
             {
-                items.Add(new AbiAction() {
+                items.Add(new AbiAction()
+                {
                     name = (string)TypeReaders["name"](data, ref readIndex),
                     type = (string)TypeReaders["string"](data, ref readIndex),
                     ricardian_contract = (string)TypeReaders["string"](data, ref readIndex)
@@ -1262,7 +1422,7 @@ namespace EosSharp.Core.Providers
             var uwtype = UnwrapTypeDef(abi, type);
 
             // binary extension type
-            if(uwtype.EndsWith("$"))
+            if (uwtype.EndsWith("$"))
             {
                 if (!isBinaryExtensionAllowed) throw new Exception("Binary Extension type not allowed.");
                 return ReadAbiType(data, uwtype.Substring(0, uwtype.Length - 1), abi, ref readIndex, isBinaryExtensionAllowed);
@@ -1272,7 +1432,7 @@ namespace EosSharp.Core.Providers
             if (uwtype.EndsWith("?"))
             {
                 var opt = (byte)ReadByte(data, ref readIndex);
-
+                uwtype = uwtype.Substring(0, uwtype.Length - 1);
                 if (opt == 0)
                 {
                     return null;
@@ -1307,7 +1467,7 @@ namespace EosSharp.Core.Providers
             }
 
             var abiVariant = abi.variants.FirstOrDefault(v => v.name == uwtype);
-            if(abiVariant != null)
+            if (abiVariant != null)
             {
                 return ReadAbiVariant(data, abiVariant, abi, ref readIndex, isBinaryExtensionAllowed);
             }
@@ -1362,13 +1522,13 @@ namespace EosSharp.Core.Providers
 
         private object ReadAbiVariant(byte[] data, Variant abiVariant, Abi abi, ref int readIndex, bool isBinaryExtensionAllowed)
         {
-            var i = (Int32)ReadVarUint32(data, ref readIndex);
+            var i = Convert.ToInt32(ReadVarUint32(data, ref readIndex));
             if (i >= abiVariant.types.Count)
             {
                 throw new Exception("type index " + i + " is not valid for variant");
             }
             var type = abiVariant.types[i];
-            return new KeyValuePair<string, object>(abiVariant.name, ReadAbiType(data, type, abi, ref readIndex, isBinaryExtensionAllowed));
+            return new KeyValuePair<string, object>(type, ReadAbiType(data, type, abi, ref readIndex, isBinaryExtensionAllowed));
         }
 
         private T ReadType<T>(byte[] data, ref int readIndex)
@@ -1405,7 +1565,7 @@ namespace EosSharp.Core.Providers
                 {
                     objectType.GetField(member.Name).SetValue(value, ReadCollectionType(data, member.FieldType, ref readIndex));
                 }
-                else if(IsOptional(member.FieldType))
+                else if (IsOptional(member.FieldType))
                 {
                     var opt = (byte)ReadByte(data, ref readIndex);
                     if (opt == 1)
@@ -1459,21 +1619,21 @@ namespace EosSharp.Core.Providers
 
         private static bool IsPrimitive(Type type)
         {
-            return type.IsPrimitive ||                   
+            return type.IsPrimitive ||
                    type.Name.ToLower() == "string" ||
                    type.Name.ToLower() == "byte[]";
         }
 
         private static string GetNormalizedReaderName(Type type, IEnumerable<Attribute> customAttributes = null)
         {
-            if(customAttributes != null)
+            if (customAttributes != null)
             {
                 var abiFieldAttr = (AbiFieldTypeAttribute)customAttributes.FirstOrDefault(attr => attr.GetType() == typeof(AbiFieldTypeAttribute));
                 if (abiFieldAttr != null)
                 {
                     return abiFieldAttr.AbiType;
                 }
-                    
+
             }
 
             var typeName = type.Name.ToLower();
@@ -1541,14 +1701,80 @@ namespace EosSharp.Core.Providers
         }
         #endregion
 
-        public byte[] SerializeStructData(object data, string typeName, Abi abi)
+        public byte[] SerializeTypeData(string typeName, object value, Abi abi)
         {
-            throw new NotImplementedException();
+            var abiStruct = abi.structs.FirstOrDefault(ast => ast.name == typeName);
+            using (MemoryStream ms = new MemoryStream())
+            {
+                WriteAbiStruct(ms, value, abiStruct, abi);
+                return ms.ToArray();
+            }
         }
 
-        public byte[] SerializeStructData(object data, AbiStruct structType, Abi abi)
+        public byte[] SerializeTypeData(object value, AbiType abiType, Abi abi)
         {
-            throw new NotImplementedException();
+            using (MemoryStream ms = new MemoryStream())
+            {
+                WriteAbiType(ms, value, abiType.type, abi, false);
+                return ms.ToArray();
+            }
+        }
+
+        public byte[] SerializeStructData(object value, AbiStruct abiStruct, Abi abi)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                WriteAbiType(ms, value, abiStruct.name, abi, false);
+                return ms.ToArray();
+            }
+        }
+
+        // TODO Summary
+        /// </summary>
+        /// <param name="action">action to pack</param>
+        /// <param name="abi">abi schema to look action structure</param>
+        /// <returns></returns>
+        public byte[] Serialize(object value, string type)
+        {
+            if(TypeWriters.TryGetValue(type, out var typeWriter))
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    typeWriter(ms, value);
+                    return ms.ToArray();
+                }
+            }
+            else
+            {
+                throw new ArgumentException(string.Format(
+                    "struct type {0} not found in predifined types, use a different method while " +
+                    "providing an ABI to serialize this type.",
+                    type));
+            }
+        }
+
+        // TODO Summary
+        /// </summary>
+        /// <param name="action">action to pack</param>
+        /// <param name="abi">abi schema to look action structure</param>
+        /// <returns></returns>
+        public T Deserialize<T>(byte[] value, string type)
+        {
+            if (TypeReaders.TryGetValue(type, out var typeReader))
+            {
+                int readIndex = 0;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    return (T)typeReader.Invoke(value, ref readIndex);
+                }
+            }
+            else
+            {
+                throw new ArgumentException(string.Format(
+                    "struct type {0} not found in predifined types, use a different method while " +
+                    "providing an ABI to serialize this type.",
+                    type));
+            }
         }
     }
 }

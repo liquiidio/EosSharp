@@ -28,6 +28,10 @@ namespace EosSharp.Core.Providers
             Keys.Add(pubKey, privKeyBytes);
         }
 
+        public DefaultSignProvider()
+        {
+        }
+
         /// <summary>
         /// Create provider with list of private keys
         /// </summary>
@@ -117,9 +121,35 @@ namespace EosSharp.Core.Providers
             }));
         }
 
+        /// <summary>
+        /// Sign bytes using the signature provider
+        /// </summary>
+        /// <param name="key">key used for signing</param>
+        /// <param name="signBytes">signature bytes</param>
+        /// <param name="abiNames">abi contract names to get abi information from</param>
+        /// <returns>List of signatures per required keys</returns>
+        public string Sign(string chainId, byte[] signBytes)
+        {
+            var data = new List<byte[]>()
+            {
+                Hex.HexToBytes(chainId),
+                signBytes,
+                new byte[32]
+            };
+
+            var hash = Sha256Manager.GetHash(SerializationHelper.Combine(data));
+
+            var sign = Secp256K1Manager.SignCompressedCompact(hash, Keys.First().Value);
+            var check = new List<byte[]>() { sign, KeyTypeBytes };
+            var checksum = Ripemd160Manager.GetHash(SerializationHelper.Combine(check)).Take(4).ToArray();
+            var signAndChecksum = new List<byte[]>() { sign, checksum };
+
+            return "SIG_K1_" + Base58.Encode(SerializationHelper.Combine(signAndChecksum));
+        }
+
         public Dictionary<string, string> Sign()
         {
-            throw new NotSupportedException("Signing without parameters is not supported for this SignatureProvider");
+            throw new NotImplementedException();
         }
     }
 }
