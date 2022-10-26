@@ -959,10 +959,12 @@ namespace EosSharp.Core.Providers
                 var valueType = value.GetType();
                 foreach (var field in abiStruct.fields)
                 {
-                    var fieldInfo = valueType.GetField(field.name);
-
-                    if (fieldInfo != null)
+                    var fieldName = FindObjectFieldName(field.name, valueType);
+                    if (fieldName != null)
+                    {
+                        var fieldInfo = valueType.GetField(fieldName);
                         WriteAbiType(ms, fieldInfo.GetValue(value), field.type, abi, true);
+                    }
                     else
                     {
                         var propName = FindObjectPropertyName(field.name, valueType);
@@ -1513,7 +1515,14 @@ namespace EosSharp.Core.Providers
                     var abiValue = ReadAbiType(data, field.type, abi, ref readIndex, true);
                     if (field.type.EndsWith("$") && abiValue == null) break;
                     var fieldName = FindObjectFieldName(field.name, value.GetType());
-                    valueType.GetField(fieldName).SetValue(value, abiValue);
+                    if(fieldName != null)
+                        valueType.GetField(fieldName).SetValue(value, abiValue);
+                    else
+                    {
+                        var propertyName = FindObjectPropertyName(field.name, valueType);
+                        valueType.GetProperty(propertyName).SetValue(value, abiValue);
+                    }
+
                 }
             }
 
@@ -1686,15 +1695,21 @@ namespace EosSharp.Core.Providers
         {
             if (objectType.GetProperties().Any(p => p.Name == name))
                 return name;
+            if (objectType.GetFields().Any(p => p.Name == name))
+                return name;
 
             name = SerializationHelper.SnakeCaseToPascalCase(name);
 
             if (objectType.GetProperties().Any(p => p.Name == name))
                 return name;
+            if (objectType.GetFields().Any(p => p.Name == name))
+                return name;
 
             name = SerializationHelper.PascalCaseToSnakeCase(name);
 
             if (objectType.GetProperties().Any(p => p.Name == name))
+                return name;
+            if (objectType.GetFields().Any(p => p.Name == name))
                 return name;
 
             return null;

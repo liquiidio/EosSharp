@@ -1,7 +1,6 @@
 ﻿using EosSharp.Core;
 using EosSharp.Core.Api.v1;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
