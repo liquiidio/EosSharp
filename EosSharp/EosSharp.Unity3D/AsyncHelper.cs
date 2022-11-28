@@ -12,7 +12,7 @@ namespace Assets.Packages.eossharp.EosSharp.EosSharp.Unity3D
         {
 #if UNITY_WEBGL
             //await UniTask.Delay(duration); 
-            Debug.Log($"Custom delay has been called for duration {duration}");
+            //Debug.Log($"Custom delay has been called for duration {duration}");
             
             while(timer < duration)
             {
