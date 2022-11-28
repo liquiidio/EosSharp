@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Threading.Tasks;
-using Unity.VisualScripting.FullSerializer;
-using UnityEditor.SceneManagement;
-using UnityEngine;
+﻿using System.Threading.Tasks;
 
 namespace Assets.Packages.eossharp.EosSharp.EosSharp.Unity3D
 {
