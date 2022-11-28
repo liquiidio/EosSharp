@@ -2,8 +2,6 @@
 
 namespace Assets.Packages.eossharp.EosSharp.EosSharp.Unity3D
 {
-
-
     public static class AsyncHelper
     {
         public static int timer = 0;
