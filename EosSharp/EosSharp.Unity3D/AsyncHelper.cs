@@ -1,24 +1,28 @@
-﻿using System.Threading.Tasks;
+﻿#if UNITY_WEBGL
+// ReSharper disable once RedundantUsingDirective
+using Cysharp.Threading.Tasks;
+#endif
+using System.Threading.Tasks;
 
 namespace Assets.Packages.eossharp.EosSharp.EosSharp.Unity3D
 {
     public static class AsyncHelper
     {
-        public static int timer = 0;
+        public static int counter = 0;
 
         public static async Task Delay(int duration)
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            //await UniTask.Delay(duration); 
+            await UniTask.Delay(duration * 100); 
             //Debug.Log($"Custom delay has been called for duration {duration}");
             
-            while(timer < duration)
-            {
-                await Task.Yield();
-                timer++;
-            }
+            //while(counter < duration)
+            //{
+            //    await Task.Yield();
+            //    counter++;
+            //}
 
-            timer = 0;
+            //counter = 0;
 #else
             await Task.Delay(duration);
 
