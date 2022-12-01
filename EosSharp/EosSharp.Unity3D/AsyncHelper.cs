@@ -12,8 +12,8 @@ namespace Assets.Packages.eossharp.EosSharp.EosSharp.Unity3D
 
         public static async Task Delay(int duration)
         {
-#if UNITY_WEBGL && !UNITY_EDITOR
-            await UniTask.Delay(duration * 100); 
+#if UNITY_WEBGL && !UNITY_EDITOR_WIN
+            await UniTask.Delay(duration); 
             //Debug.Log($"Custom delay has been called for duration {duration}");
             
             //while(counter < duration)
