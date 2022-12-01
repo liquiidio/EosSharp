@@ -2,27 +2,30 @@
 // ReSharper disable once RedundantUsingDirective
 using Cysharp.Threading.Tasks;
 #endif
+using System;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Assets.Packages.eossharp.EosSharp.EosSharp.Unity3D
 {
     public static class AsyncHelper
     {
-        public static int counter = 0;
+        
 
         public static async Task Delay(int duration)
         {
-#if UNITY_WEBGL && !UNITY_EDITOR_WIN
-            await UniTask.Delay(duration); 
-            //Debug.Log($"Custom delay has been called for duration {duration}");
-            
-            //while(counter < duration)
-            //{
-            //    await Task.Yield();
-            //    counter++;
-            //}
+            var endTime = DateTimeOffset.Now.AddSeconds(duration);
 
-            //counter = 0;
+#if UNITY_WEBGL && !UNITY_EDITOR_WIN
+            //await UniTask.Delay(duration); 
+            //Debug.Log($"Custom delay has been called for duration {duration}");
+            int counter = 0;
+            while(DateTimeOffset.Now < endTime)
+            {
+                await Task.Yield();
+                counter++;
+                Debug.Log($"counter {counter}");
+            }
 #else
             await Task.Delay(duration);
 
