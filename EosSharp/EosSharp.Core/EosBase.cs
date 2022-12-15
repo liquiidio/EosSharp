@@ -486,50 +486,6 @@ namespace EosSharp.Core
         }
 
         /// <summary>
-        /// Query for account actions log
-        /// </summary>
-        /// <param name="accountName">account to query information</param>
-        /// <param name="pos">Absolute sequence positon -1 is the end/last action</param>
-        /// <param name="offset">Number of actions relative to pos, negative numbers return [pos-offset,pos), positive numbers return [pos,pos+offset)</param>
-        /// <returns></returns>
-        public Task<GetActionsResponse> GetActions(string accountName, Int32 pos, Int32 offset)
-        {
-            return Api.GetActions(new GetActionsRequest()
-            {
-                account_name = accountName,
-                pos = pos,
-                offset = offset
-            });
-        }
-
-        /// <summary>
-        /// Query transaction information
-        /// </summary>
-        /// <param name="transactionId">transaction id</param>
-        /// <returns>Transaction information</returns>
-        public Task<GetTransactionResponse> GetTransaction(string transactionId, UInt32? blockNumberHint = null)
-        {
-            return Api.GetTransaction(new GetTransactionRequest()
-            {
-                id = transactionId,
-                block_num_hint = blockNumberHint
-            });
-        }
-
-        /// <summary>
-        /// Query public key accounts
-        /// </summary>
-        /// <param name="publicKey">public key</param>
-        /// <returns>account names</returns>
-        public async Task<List<string>> GetKeyAccounts(string publicKey)
-        {
-            return (await Api.GetKeyAccounts(new GetKeyAccountsRequest()
-            {
-                public_key = publicKey
-            })).account_names;
-        }
-
-        /// <summary>
         /// Query controlled accounts by a given account
         /// </summary>
         /// <param name="accountName">account name to search</param>
