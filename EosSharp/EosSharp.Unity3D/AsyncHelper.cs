@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.Packages.eossharp.EosSharp.EosSharp.Unity3D
+namespace eossharp.EosSharp.EosSharp.Unity3D
 {
     public static class AsyncHelper
     {
