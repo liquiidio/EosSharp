@@ -19,15 +19,15 @@ namespace EosSharp.Core.Exceptions
 
         }
 
-        public ApiErrorException(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                return;
+        //public ApiErrorException(SerializationInfo info, StreamingContext context)
+        //{
+        //    if (info == null)
+        //        return;
 
-            code = info.GetInt32("code");
-            message = info.GetString("message");
-            error = (ApiError)info.GetValue("error", typeof(ApiError));
-        }
+        //    code = info.GetInt32("code");
+        //    message = info.GetString("message");
+        //    error = (ApiError)info.GetValue("error", typeof(ApiError));
+        //}
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

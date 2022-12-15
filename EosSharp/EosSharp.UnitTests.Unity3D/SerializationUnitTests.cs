@@ -1,4 +1,4 @@
-﻿// Auto Generated, do not edit.
+// Auto Generated, do not edit.
 using Newtonsoft.Json;
 using System;
 
@@ -25,10 +25,10 @@ namespace EosSharp.UnitTests.Unity3D
                 Console.WriteLine(JsonConvert.SerializeObject(ex));
             }
 
-            if(success)
-				Console.WriteLine("Test DoubleSerialization run successfuly.");
-			else
-				Console.WriteLine("Test DoubleSerialization run failed.");
+            if (success)
+                Console.WriteLine("Test DoubleSerialization run successfuly.");
+            else
+                Console.WriteLine("Test DoubleSerialization run failed.");
         }
         public void DecimalSerialization()
         {
@@ -43,16 +43,16 @@ namespace EosSharp.UnitTests.Unity3D
                 Console.WriteLine(JsonConvert.SerializeObject(ex));
             }
 
-            if(success)
-				Console.WriteLine("Test DecimalSerialization run successfuly.");
-			else
-				Console.WriteLine("Test DecimalSerialization run failed.");
+            if (success)
+                Console.WriteLine("Test DecimalSerialization run successfuly.");
+            else
+                Console.WriteLine("Test DecimalSerialization run failed.");
         }
 
-		public void TestAll()
+        public void TestAll()
         {
-			DoubleSerialization();
-			DecimalSerialization();
+            DoubleSerialization();
+            DecimalSerialization();
         }
-	}
+    }
 }

@@ -139,12 +139,6 @@ namespace EosSharp.Core.Api.v1
             return await HttpHandler.PostJsonAsync<PushTransactionResponse>(url, data);
         }
 
-        public async Task<GetControlledAccountsResponse> GetControlledAccounts(GetControlledAccountsRequest data)
-        {
-            var url = string.Format("{0}/v1/chain/get_controlled_accounts", Config.HttpEndpoint);
-            return await HttpHandler.PostJsonAsync<GetControlledAccountsResponse>(url, data);
-        }
-
         public async Task<GetActivatedProtocolFeaturesResponse> GetActivatedProtocolFeatures(GetActivatedProtocolFeaturesRequest data)
         {
             var url = string.Format("{0}/v1/chain/get_activated_protocol_features", Config.HttpEndpoint);

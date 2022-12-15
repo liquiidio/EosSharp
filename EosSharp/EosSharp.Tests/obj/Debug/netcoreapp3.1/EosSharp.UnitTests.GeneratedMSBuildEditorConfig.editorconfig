@@ -1,0 +1,3 @@
+is_global = true
+build_property.RootNamespace = EosSharp.UnitTests
+build_property.ProjectDir = E:\source\repos\EosSharp-Private\EosSharp\EosSharp.Tests\

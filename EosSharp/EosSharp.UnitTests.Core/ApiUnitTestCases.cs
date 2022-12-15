@@ -251,39 +251,6 @@ namespace EosSharp.UnitTests
             return CreateTransaction();
         }
 
-        public Task GetActions()
-        {
-            return DefaultApi.GetActions(new GetActionsRequest() {
-                account_name = "eosio"
-            });
-        }
-
-        public async Task GetTransaction()
-        {
-            var trxResult = await CreateTransaction();
-
-            var result = await DefaultApi.GetTransaction(new GetTransactionRequest()
-            {
-                id = trxResult.transaction_id
-            });
-        }
-
-        public Task GetKeyAccounts()
-        {
-            return DefaultApi.GetKeyAccounts(new GetKeyAccountsRequest()
-            {
-                public_key = "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
-            });
-        }
-
-        public Task GetControlledAccounts()
-        {
-            return DefaultApi.GetControlledAccounts(new GetControlledAccountsRequest()
-            {
-                controlling_account = "eosio"
-            });
-        }
-
         private async Task<PushTransactionResponse> CreateTransaction()
         {
             var getInfoResult = await DefaultApi.GetInfo();

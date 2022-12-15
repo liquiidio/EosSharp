@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TT\**" />
     <Compile Remove="UnityTester\**" />
+    <EmbeddedResource Remove="TT\**" />
     <EmbeddedResource Remove="UnityTester\**" />
+    <None Remove="TT\**" />
     <None Remove="UnityTester\**" />
   </ItemGroup>
 
@@ -29,11 +32,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Update="SerializationUnitTests.cs">
-      <DependentUpon>SerializationUnitTests.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -43,10 +41,6 @@
     </None>
     <None Update="EosUnitTests.tt">
       <LastGenOutput>EosUnitTests.cs</LastGenOutput>
-      <Generator>TextTemplatingFileGenerator</Generator>
-    </None>
-    <None Update="SerializationUnitTests.tt">
-      <LastGenOutput>SerializationUnitTests.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>
   </ItemGroup>

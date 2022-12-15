@@ -919,18 +919,6 @@ namespace EosSharp.Core.Api.v1
  
 		public ProcessedTransaction processed;
     }
-
-    [Serializable]
-    public class GetControlledAccountsRequest
-    {
-		public string controlling_account;
-    }
-	[Serializable]
-    public class GetControlledAccountsResponse
-    {
- 
-		public List<string> controlled_accounts;
-    }
     [Serializable]
     public class GetActivatedProtocolFeaturesRequest
     {

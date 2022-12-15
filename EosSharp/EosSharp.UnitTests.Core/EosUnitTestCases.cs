@@ -25,7 +25,7 @@ namespace EosSharp.UnitTests
             {
                 json = false,
                 code = "eosio.token",
-                scope = "EOS",
+                scope = "WAX",
                 table = "stat"
             });
         }

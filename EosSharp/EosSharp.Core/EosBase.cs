@@ -485,19 +485,6 @@ namespace EosSharp.Core
             return result.transaction_id;
         }
 
-        /// <summary>
-        /// Query controlled accounts by a given account
-        /// </summary>
-        /// <param name="accountName">account name to search</param>
-        /// <returns>controlled account names</returns>
-        public async Task<List<string>> GetControlledAccounts(string accountName)
-        {
-            return (await Api.GetControlledAccounts(new GetControlledAccountsRequest()
-            {
-                controlling_account = accountName
-            })).controlled_accounts;
-        }
-
         #endregion
     }
 }

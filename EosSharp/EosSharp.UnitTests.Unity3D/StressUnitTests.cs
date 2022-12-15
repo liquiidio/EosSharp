@@ -1,4 +1,4 @@
-﻿using EosSharp.Core;
+using EosSharp.Core;
 using EosSharp.Core.Providers;
 using EosSharp.Unity3D;
 using Newtonsoft.Json;
@@ -17,11 +17,8 @@ namespace EosSharp.UnitTests.Unity3D
             {
                 SignProvider = new DefaultSignProvider("5K57oSZLpfzePvQNpsLS6NfKXLhhRARNU13q6u2ZPQCGHgKLbTA"),
 
-                HttpEndpoint = "https://api.eossweden.se", //Mainnet
-                ChainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
-
-                //HttpEndpoint = "https://nodeos01.btuga.io",
-                //ChainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
+                HttpEndpoint = "https://wax.api.eosnation.io/",
+                ChainId = "1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4"
             });
         }
 
