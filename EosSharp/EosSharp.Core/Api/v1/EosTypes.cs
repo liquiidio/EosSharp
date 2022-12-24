@@ -965,7 +965,6 @@ namespace EosSharp.Core.Api.v1
 	[Serializable]
     public class GetKeyAccountsResponse
     {
- 
 		public List<string> account_names;
     }
 	[Serializable]
@@ -976,7 +975,6 @@ namespace EosSharp.Core.Api.v1
 	[Serializable]
     public class GetControlledAccountsResponse
     {
- 
 		public List<string> controlled_accounts;
     }
 	#endregion
