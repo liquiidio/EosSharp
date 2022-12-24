@@ -1744,10 +1744,9 @@ namespace EosSharp.Core.Providers
             }
         }
 
-        // TODO Summary
         /// </summary>
-        /// <param name="action">action to pack</param>
-        /// <param name="abi">abi schema to look action structure</param>
+        /// <param name="value">object to pack</param>
+        /// <param name="type">abi-type (base-type) used for serialization</param>
         /// <returns></returns>
         public byte[] Serialize(object value, string type)
         {
@@ -1768,10 +1767,9 @@ namespace EosSharp.Core.Providers
             }
         }
 
-        // TODO Summary
         /// </summary>
-        /// <param name="action">action to pack</param>
-        /// <param name="abi">abi schema to look action structure</param>
+        /// <param name="value">bytes to unpack</param>
+        /// <param name="type">abi-type (base-type) used for deserialization</param>
         /// <returns></returns>
         public T Deserialize<T>(byte[] value, string type)
         {
