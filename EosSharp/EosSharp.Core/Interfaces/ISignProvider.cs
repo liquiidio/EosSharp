@@ -32,6 +32,6 @@ namespace EosSharp.Core.Interfaces
         /// <returns>List of signatures per required keys</returns>
         string Sign(string chainId, byte[] signBytes);
 
-        Dictionary<string, string> Sign();
+        Dictionary<string, string> Sign(); /// TODO
     }
 }

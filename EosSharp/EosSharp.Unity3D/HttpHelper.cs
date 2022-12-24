@@ -36,13 +36,12 @@ namespace EosSharp.Unity3D
         /// <returns>Response data deserialized to type TResponseData</returns>
         public async Task<TResponseData> PostJsonAsync<TResponseData>(string url, object data)
         {
-            using (var uwr = BuildUnityWebRequest(url, UnityWebRequest.kHttpVerbPOST, data))
-            {
-                await uwr.SendWebRequest();
-                CheckUnityWebRequestErrors(uwr);
+            UnityWebRequest uwr = BuildUnityWebRequest(url, UnityWebRequest.kHttpVerbPOST, data);
 
-                return JsonConvert.DeserializeObject<TResponseData>(uwr.downloadHandler.text);
-            }
+            await uwr.SendWebRequest();
+            CheckUnityWebRequestErrors(uwr);
+
+            return JsonConvert.DeserializeObject<TResponseData>(uwr.downloadHandler.text);
         }
 
         /// <summary>
@@ -69,7 +68,7 @@ namespace EosSharp.Unity3D
         /// <returns>Response data deserialized to type TResponseData</returns>
         public async Task<TResponseData> PostJsonWithCacheAsync<TResponseData>(string url, object data, bool reload = false)
         {
-            var hashKey = GetRequestHashKey(url, data);
+            string hashKey = GetRequestHashKey(url, data);
 
             if (!reload)
             {
@@ -78,13 +77,12 @@ namespace EosSharp.Unity3D
                     return (TResponseData)value;
             }
 
-            using (var uwr = BuildUnityWebRequest(url, UnityWebRequest.kHttpVerbPOST, data))
-            {
-                await uwr.SendWebRequest();
-                CheckUnityWebRequestErrors(uwr);
+            UnityWebRequest uwr = BuildUnityWebRequest(url, UnityWebRequest.kHttpVerbPOST, data);
 
-                return JsonConvert.DeserializeObject<TResponseData>(uwr.downloadHandler.text);
-            }
+            await uwr.SendWebRequest();
+            CheckUnityWebRequestErrors(uwr);
+
+            return JsonConvert.DeserializeObject<TResponseData>(uwr.downloadHandler.text);
         }
 
         /// <summary>
@@ -110,14 +108,12 @@ namespace EosSharp.Unity3D
         /// <returns>Response data deserialized to type TResponseData</returns>
         public async Task<TResponseData> GetJsonAsync<TResponseData>(string url)
         {
-            using (var uwr = UnityWebRequest.Get(url))
-            {
+            UnityWebRequest uwr = UnityWebRequest.Get(url);
 
-                await uwr.SendWebRequest();
-                CheckUnityWebRequestErrors(uwr);
+            await uwr.SendWebRequest();
+            CheckUnityWebRequestErrors(uwr);
 
-                return JsonConvert.DeserializeObject<TResponseData>(uwr.downloadHandler.text);
-            }
+            return JsonConvert.DeserializeObject<TResponseData>(uwr.downloadHandler.text);
         }
 
         /// <summary>
@@ -232,8 +228,8 @@ namespace EosSharp.Unity3D
         {
             var uwr = new UnityWebRequest(url, verb)
             {
-                uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data))),
-                downloadHandler = new DownloadHandlerBuffer()
+                uploadHandler = (UploadHandler)new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data))),
+                downloadHandler = (DownloadHandler)new DownloadHandlerBuffer()
             };
 
             uwr.SetRequestHeader("Content-Type", "application/json");
@@ -271,11 +267,11 @@ namespace EosSharp.Unity3D
         /// <param name="uwr"></param>
         private static void CheckUnityWebRequestErrors(UnityWebRequest uwr)
         {
-            if (uwr.result == UnityWebRequest.Result.ConnectionError)
+            if (uwr.isNetworkError)
             {
                 throw BuildApiError("Error While Sending: " + uwr.error, (int)uwr.responseCode);
             }
-            else if (uwr.result == UnityWebRequest.Result.ProtocolError)
+            else if (uwr.isHttpError)
             {
                 throw BuildApiError(uwr.downloadHandler.text, (int)uwr.responseCode);
             }

@@ -213,7 +213,7 @@ namespace EosSharp
 
             var content = await StreamToStringAsync(stream);
 
-            Exception apiError;
+            ApiErrorException apiError = null;
             try
             {
                 apiError = JsonConvert.DeserializeObject<ApiErrorException>(content);
@@ -226,8 +226,6 @@ namespace EosSharp
                     Content = content
                 };
             }
-
-            apiError ??= new Exception($"Request failed with code {response.StatusCode}, {response.ReasonPhrase}");
 
             throw apiError;
         }

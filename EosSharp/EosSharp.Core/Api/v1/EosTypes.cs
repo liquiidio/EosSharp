@@ -6,7 +6,6 @@
 using EosSharp.Core.DataAttributes;
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace EosSharp.Core.Api.v1
 {
@@ -237,7 +236,6 @@ namespace EosSharp.Core.Api.v1
 		
 		public object data;
 		
-		[JsonIgnore]
 		public string hex_data;
     }
 	[Serializable]
