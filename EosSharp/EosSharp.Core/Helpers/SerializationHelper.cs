@@ -380,11 +380,19 @@ namespace EosSharp.Core.Helpers
         }
 
 
+        /// <summary>
+        /// It takes a string of hexadecimal digits and reverses the order of the bytes
+        /// </summary>
+        /// <param name="h">The hex string to reverse.</param>
+        /// <returns>
+        /// The hex value is being reversed.
+        /// </returns>
         public static string ReverseHex(string h)
         {
             return h.Substring(6, 2) + h.Substring(4, 2) + h.Substring(2, 2) + h.Substring(0, 2);
         }
 
+        /* A char array of all the possible characters that can be used in Leap-Name. */
         private static readonly char[] Charmap = new[] { '.', '1', '2', '3', '4', '5', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
         /// <summary>

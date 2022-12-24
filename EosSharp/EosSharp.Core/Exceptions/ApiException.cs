@@ -17,6 +17,7 @@ namespace EosSharp.Core.Exceptions
 
         }
 
+        /* The above code is deserializing the exception object. */
         public ApiException(SerializationInfo info, StreamingContext context)
         {
             if (info == null)
@@ -26,6 +27,16 @@ namespace EosSharp.Core.Exceptions
             Content = info.GetString("Content");
         }
 
+        /// <summary>
+        /// > The function is called when the object is serialized
+        /// </summary>
+        /// <param name="SerializationInfo">This is a container for all the data that needs to be
+        /// serialized.</param>
+        /// <param name="StreamingContext">This is a structure that contains information about the source and
+        /// destination of a given serialized stream, and provides an additional caller-defined context.</param>
+        /// <returns>
+        /// The status code and the content of the response.
+        /// </returns>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             if (info == null)

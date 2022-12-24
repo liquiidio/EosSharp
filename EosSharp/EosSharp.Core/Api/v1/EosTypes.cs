@@ -13,199 +13,204 @@ namespace EosSharp.Core.Api.v1
 	[Serializable]
 	public class Symbol
     {
-		
+		//! Name of the Symbol
 		public string name;
-		
+		//! Precision of the Symbol
 		public byte precision;
     }
 	[Serializable]
 	public class Resource
     {
-		
+		//! Amount used	
 		public Int64 used;
-		
+		//! Amount available
 		public Int64 available;
-		
+		//! Max Amount
 		public Int64 max;
     }
 	[Serializable]
 	public class AuthorityKey
     {
-		
+		//! Public Key of the Authority
 		public string key;
-		
+		//! Weight of the Key
 		public Int32 weight;
     }
 	[Serializable]
 	public class AuthorityAccount
     {
-		
+		//! Permission Level of an Authority
 		public PermissionLevel permission;
-		
+		//! Weight of the Permission
 		public Int32 weight;
     }
 	[Serializable]
 	public class AuthorityWait
     {
-		
+		//! Delay in Seconds
 		public string wait_sec;
-		
+		//! Weight of the AuthorityWait
 		public Int32 weight;
     }
 	[Serializable]
 	public class Authority
     {
-		
+		//! Threshold of the Authority
 		public UInt32 threshold;
-		
+		//! Keys assigned to the Authority
 		public List<AuthorityKey> keys;
-		
+		//! Accounts assigned to the Authority	
 		public List<AuthorityAccount> accounts;
-		
+		//! Waits assigned to the Authority
 		public List<AuthorityWait> waits;
     }
 	[Serializable]
 	public class Permission
     {
-		
+		//! Name of the Permission
 		public string perm_name;
-		
+		//! Parent-Permission of the Permission
 		public string parent;
-		
+		//! Authority Required
 		public Authority required_auth;
     }
 	[Serializable]
 	public class AbiType
     {
-		
+		//! New Type-Name
 		public string new_type_name;
-		
+		//! Initial/Original Type-Name
 		public string type;
     }
 	[Serializable]
 	public class AbiField
     {
-		
+		//! Name of the AbiField
 		public string name;
-		
+		//! Type of the AbiField
 		public string type;
     }
 	[Serializable]
 	public class AbiStruct
     {
-		
+		//! Name of the AbiStruct
 		public string name;
-		
+		//! base-struct of the AbiStruct
 		public string @base;
-		
+		//! List fo Fields of the AbiStruct
 		public List<AbiField> fields;
     }
 	[Serializable]
 	public class AbiAction
     {
 		[AbiFieldType("name")]
+		//! Name of the Action
 		public string name;
-		
+		//! Type of the Action	
 		public string type;
-		
+		//! Ricardian-Contract of the Action
 		public string ricardian_contract;
     }
 	[Serializable]
 	public class AbiTable
     {
 		[AbiFieldType("name")]
+		//! Name of the Table
 		public string name;
-		
+		//! index-type of the primary index
 		public string index_type;
-		
+		//! Key-Names of the Table
 		public List<string> key_names;
-		
+		//! Key-Types of the Table
 		public List<string> key_types;
-		
+		//! Type of the Table-Rows
 		public string type;
     }
 	[Serializable]
 	public class Abi
     {
-		
+		//! ABI-Version used for the ABI
 		public string version;
-		
+		//! List of Types contained in the ABI
 		public List<AbiType> types;
-		
+		//! List of Structs contained in the ABI
 		public List<AbiStruct> structs;
-		
+		//! List of Actions contained in the ABI
 		public List<AbiAction> actions;
-		
+		//! List of Tables contained in the ABI
 		public List<AbiTable> tables;
-		
+		//! List of Ricardian Clauses contained in the ABI
 		public List<AbiRicardianClause> ricardian_clauses;
-		
+		//! List of Error Messages contained in the ABI
 		public List<string> error_messages;
-		
+		//! List of Ricardian Clauses contained in the ABI
 		public List<Extension> abi_extensions;
-		
+		//! List of Variants contained in the ABI
 		public List<Variant> variants;
     }
 	[Serializable]
 	public class AbiRicardianClause
     {
-		
+		//! Identifier of the Ricardian Clause
 		public string id;
-		
+		//! Body/Content of the Ricardian Clause
 		public string body;
     }
 	[Serializable]
 	public class CurrencyStat
     {
-		
+		//! Current Supply of the Currency
 		public string supply;
-		
+		//! Maximum Supply of the Currency
 		public string max_supply;
-		
+		//! Issuer of the Currency
 		public string issuer;
     }
 	[Serializable]
 	public class Producer
     {
 		[AbiFieldType("name")]
+		//! name of the Owner of the Producer
 		public string owner;
 		[AbiFieldType("float64")]
+		//! Total votes this producer received
 		public double total_votes;
 		[AbiFieldType("public_key")]
+		//! Public Key of the Producer
 		public string producer_key;
-		
+		//! true if Producer is active, false if not
 		public bool is_active;
-		
+		//! Url pointing to the website of the producer
 		public string url;
-		
+		//! Number of unpaid Blocks
 		public UInt32 unpaid_blocks;
-		
+		//! Time the Producer last claimed 
 		public UInt64 last_claim_time;
-		
+		//! Location of the Producer (ISO-Code)
 		public UInt16 location;
     }
 	[Serializable]
 	public class ScheduleProducers
     {
-		
+		//! Name of the Producer Account
 		public string producer_name;
-		
+		//! Key used to sign transactions
 		public string block_signing_key;
     }
 	[Serializable]
 	public class Schedule
     {
-		
+		//! Schedule Version
 		public UInt32? version;
-		
+		//! List of ctive Producers
 		public List<ScheduleProducers> producers;
     }
 	[Serializable]
 	public class PermissionLevel
     {
-		
+		//! Name of the Account
 		public string actor;
-		
+		//! Name of the Permission
 		public string permission;
     }
 	[Serializable]
@@ -931,12 +936,15 @@ namespace EosSharp.Core.Api.v1
     [Serializable]
     public class GetActivatedProtocolFeaturesResponse
     {
+		//! List of Activated Protocol Features
         public List<string> activated_protocol_features;
     }
     [Serializable]
     public class GetAccountsByAuthorizersRequest
     {
+		//! List of Accounts assigned to the Authorizer
         public List<string> accounts;
+		// List of Public Keys assigned to the Authorizer
         public List<string> keys;
     }
     [Serializable]
@@ -944,10 +952,15 @@ namespace EosSharp.Core.Api.v1
     {
 		public class Account
 		{
+			//! Name of the Account
             public string account_name;
-            public string permission_name;
-            public string authorizer;
-            public ushort weight;
+			//! Name of the Permission
+			public string permission_name;
+			//! Name of the Authorizer
+			public string authorizer;
+			//! Weight of the Authorizer
+			public ushort weight;
+			//! Threshold to sign
             public ushort threshold;
         }
 		public List<GetAccountsByAuthorizersResponse.Account> accounts;
