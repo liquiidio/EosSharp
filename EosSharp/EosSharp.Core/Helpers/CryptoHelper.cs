@@ -237,6 +237,14 @@ namespace EosSharp.Core.Helpers
         }
 
 
+        /// <summary>
+        /// > It takes a 32 byte key and a 16 byte IV, and uses them to encrypt a string
+        /// </summary>
+        /// <param name="keyBytes">The key used to encrypt the data.</param>
+        /// <param name="plainText">The text to be encrypted.</param>
+        /// <returns>
+        /// The encrypted text.
+        /// </returns>
         public static byte[] AesEncrypt(byte[] keyBytes, string plainText)
         {
             using (Aes aes = Aes.Create())
@@ -247,6 +255,14 @@ namespace EosSharp.Core.Helpers
             }
         }
 
+        /// <summary>
+        /// It decrypts the ciphertext using the keyBytes.
+        /// </summary>
+        /// <param name="keyBytes">The key used to encrypt the data.</param>
+        /// <param name="cipherText">The encrypted text</param>
+        /// <returns>
+        /// The decrypted string.
+        /// </returns>
         public static string AesDecrypt(byte[] keyBytes, byte[] cipherText)
         {
             using (Aes aes = Aes.Create())
@@ -259,6 +275,17 @@ namespace EosSharp.Core.Helpers
             }
         }
 
+        /// <summary>
+        /// It takes a string, a key, and an IV, and returns an encrypted byte array
+        /// </summary>
+        /// <param name="plainText">The text to be encrypted.</param>
+        /// <param name="Key">The key used to encrypt the data.</param>
+        /// <param name="IV">The initialization vector is a random number that is used to encrypt the
+        /// first block of text in the data. This number is then used in the decryption of the
+        /// data.</param>
+        /// <returns>
+        /// The encrypted bytes from the memory stream.
+        /// </returns>
         public static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
         {
             // Check arguments.
@@ -299,6 +326,18 @@ namespace EosSharp.Core.Helpers
             return encrypted;
         }
 
+        /// <summary>
+        /// It takes a byte array of ciphertext, a byte array of key, and a byte array of IV, and returns a
+        /// string of plaintext
+        /// </summary>
+        /// <param name="cipherText">The encrypted string.</param>
+        /// <param name="Key">The key used to encrypt the data.</param>
+        /// <param name="IV">The initialization vector. This is a random string of bytes that is used to
+        /// initialize the encryption algorithm. It is used to ensure that the same plaintext will not always
+        /// produce the same ciphertext.</param>
+        /// <returns>
+        /// The decrypted string.
+        /// </returns>
         public static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
         {
             // Check arguments.
