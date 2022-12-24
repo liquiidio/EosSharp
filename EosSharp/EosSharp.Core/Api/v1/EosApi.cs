@@ -3,8 +3,7 @@
   
 
 // Auto Generated, do not edit.
-using EosSharp.Core;
-using EosSharp.Core.Api.v1;
+
 using EosSharp.Core.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -81,14 +80,7 @@ namespace EosSharp.Core.Api.v1
             var url = string.Format("{0}/v1/chain/get_block", Config.HttpEndpoint);
             return await HttpHandler.PostJsonAsync<GetBlockResponse>(url, data);
         }
-
-        public async Task<GetBlockInfoResponse> GetBlockInfo(GetBlockInfoRequest data)
-        {
-            var url = string.Format("{0}/v1/chain/get_block_info", Config.HttpEndpoint);
-            return await HttpHandler.PostJsonAsync<GetBlockInfoResponse>(url, data);
-        }
-
-        public async Task<GetBlockHeaderStateResponse> GetBlockHeaderState(GetBlockHeaderStateRequest data)
+		public async Task<GetBlockHeaderStateResponse> GetBlockHeaderState(GetBlockHeaderStateRequest data)
         {
             var url = string.Format("{0}/v1/chain/get_block_header_state", Config.HttpEndpoint);
             return await HttpHandler.PostJsonAsync<GetBlockHeaderStateResponse>(url, data);
@@ -138,17 +130,25 @@ namespace EosSharp.Core.Api.v1
             var url = string.Format("{0}/v1/chain/push_transaction", Config.HttpEndpoint);
             return await HttpHandler.PostJsonAsync<PushTransactionResponse>(url, data);
         }
-
-        public async Task<GetActivatedProtocolFeaturesResponse> GetActivatedProtocolFeatures(GetActivatedProtocolFeaturesRequest data)
+		public async Task<GetActionsResponse> GetActions(GetActionsRequest data)
         {
-            var url = string.Format("{0}/v1/chain/get_activated_protocol_features", Config.HttpEndpoint);
-            return await HttpHandler.PostJsonAsync<GetActivatedProtocolFeaturesResponse>(url, data);
+            var url = string.Format("{0}/v1/history/get_actions", Config.HttpEndpoint);
+            return await HttpHandler.PostJsonAsync<GetActionsResponse>(url, data);
         }
-
-        public async Task<GetAccountsByAuthorizersResponse> GetAccountsByAuthorizers(GetAccountsByAuthorizersRequest data)
+		public async Task<GetTransactionResponse> GetTransaction(GetTransactionRequest data)
         {
-            var url = string.Format("{0}/v1/chain/get_accounts_by_authorizers", Config.HttpEndpoint);
-            return await HttpHandler.PostJsonAsync<GetAccountsByAuthorizersResponse>(url, data);
+            var url = string.Format("{0}/v1/history/get_transaction", Config.HttpEndpoint);
+            return await HttpHandler.PostJsonAsync<GetTransactionResponse>(url, data);
+        }
+		public async Task<GetKeyAccountsResponse> GetKeyAccounts(GetKeyAccountsRequest data)
+        {
+            var url = string.Format("{0}/v1/history/get_key_accounts", Config.HttpEndpoint);
+            return await HttpHandler.PostJsonAsync<GetKeyAccountsResponse>(url, data);
+        }
+		public async Task<GetControlledAccountsResponse> GetControlledAccounts(GetControlledAccountsRequest data)
+        {
+            var url = string.Format("{0}/v1/history/get_controlled_accounts", Config.HttpEndpoint);
+            return await HttpHandler.PostJsonAsync<GetControlledAccountsResponse>(url, data);
         }
     }
 }

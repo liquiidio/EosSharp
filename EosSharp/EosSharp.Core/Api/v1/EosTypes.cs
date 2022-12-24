@@ -705,47 +705,39 @@ namespace EosSharp.Core.Api.v1
     {
 		public string block_num_or_id;
     }
-    [Serializable]
-	public class GetBlockInfoRequest
+	[Serializable]
+    public class GetBlockResponse
     {
-        public int block_num;
-    }
-    [Serializable]
-    public class GetBlockResponse : GetBlockInfoResponse
-	{
-        public Schedule new_producers;
+ 
+		public DateTime timestamp;
+ 
+		public string producer;
+ 
+		public UInt32 confirmed;
+ 
+		public string previous;
+ 
+		public string transaction_mroot;
+ 
+		public string action_mroot;
+ 
+		public UInt32 schedule_version;
+ 
+		public Schedule new_producers;
  
 		public List<Extension> block_extensions;
  
 		public List<Extension> header_extensions;
-        
+ 
+		public string producer_signature;
+ 
 		public List<TransactionReceipt> transactions;
-    }
-    [Serializable]
-    public class GetBlockInfoResponse
-    {
-
-        public DateTime timestamp;
-
-        public string producer;
-
-        public UInt32 confirmed;
-
-        public string previous;
-
-        public string transaction_mroot;
-
-        public string action_mroot;
-
-        public UInt32 schedule_version;
-
-        public string producer_signature;
-
-        public string id;
-
-        public UInt32 block_num;
-
-        public UInt32 ref_block_prefix;
+ 
+		public string id;
+ 
+		public UInt32 block_num;
+ 
+		public UInt32 ref_block_prefix;
     }
 	[Serializable]
     public class GetBlockHeaderStateRequest
@@ -921,38 +913,66 @@ namespace EosSharp.Core.Api.v1
  
 		public ProcessedTransaction processed;
     }
-    [Serializable]
-    public class GetActivatedProtocolFeaturesRequest
+	[Serializable]
+    public class GetActionsRequest
     {
-        public string upper_bound = "-1";
-        public string lower_bound = "0";
-        public Int32 limit = 10;
-        public bool search_by_block_num;
-        public bool reverse;
+		public string account_name;
+		public Int32 pos;
+		public Int32 offset;
     }
-    [Serializable]
-    public class GetActivatedProtocolFeaturesResponse
+	[Serializable]
+    public class GetActionsResponse
     {
-        public List<string> activated_protocol_features;
+ 
+		public List<GlobalAction> actions;
+ 
+		public UInt32 last_irreversible_block;
+ 
+		public bool time_limit_exceeded_error;
     }
-    [Serializable]
-    public class GetAccountsByAuthorizersRequest
+	[Serializable]
+    public class GetTransactionRequest
     {
-        public List<string> accounts;
-        public List<string> keys;
+		public string id;
+		public UInt32? block_num_hint;
     }
-    [Serializable]
-    public class GetAccountsByAuthorizersResponse
+	[Serializable]
+    public class GetTransactionResponse
     {
-		public class Account
-		{
-            public string account_name;
-            public string permission_name;
-            public string authorizer;
-            public ushort weight;
-            public ushort threshold;
-        }
-		public List<GetAccountsByAuthorizersResponse.Account> accounts;
+ 
+		public string id;
+ 
+		public DetailedTransaction trx;
+ 
+		public DateTime block_time;
+ 
+		public UInt32 block_num;
+ 
+		public UInt32 last_irreversible_block;
+ 
+		public List<ActionTrace> traces;
+    }
+	[Serializable]
+    public class GetKeyAccountsRequest
+    {
+		public string public_key;
+    }
+	[Serializable]
+    public class GetKeyAccountsResponse
+    {
+ 
+		public List<string> account_names;
+    }
+	[Serializable]
+    public class GetControlledAccountsRequest
+    {
+		public string controlling_account;
+    }
+	[Serializable]
+    public class GetControlledAccountsResponse
+    {
+ 
+		public List<string> controlled_accounts;
     }
 	#endregion
 }
