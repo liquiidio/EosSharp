@@ -50,7 +50,7 @@ jobs:
       - name: Determine version
         run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
       - name: Pack
-        run: dotnet pack --output ./artifacts --configuration Release -p:Version=$VERSION
+        run: dotnet pack ./EosSharp/EosSharp/EosSharp.csproj --output ./artifacts --configuration Release -p:Version=$VERSION
       - name: Upload package
         uses: actions/upload-artifact@v1
         with:
