@@ -16,11 +16,11 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Install dependencies
-        run: dotnet restore ./EosSharp
+        run: dotnet restore ./EosSharp/EosSharp/EosSharp.csproj
       - name: Build
-        run: dotnet build ./EosSharp --configuration Release --no-restore
+        run: dotnet build ./EosSharp/EosSharp/EosSharp.csproj --configuration Release --no-restore
       - name: Test
-        run: dotnet test ./EosSharp --no-build --configuration Release --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+        run: dotnet test ./EosSharp/EosSharp.Tests/EosSharp.Tests.csproj --no-build --configuration Release --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v3
         with:
