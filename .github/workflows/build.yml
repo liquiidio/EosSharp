@@ -1,0 +1,30 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        dotnet-version: ['3.0', '3.1.x', '5.0.x', '6.0.x', '7.0.x']
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Install dependencies
+        run: dotnet restore ./EosSharp/EosSharp/EosSharp.csproj
+      - name: Build
+        run: dotnet build ./EosSharp/EosSharp/EosSharp.csproj --configuration Release --no-restore
+      - name: Test
+        run: dotnet test ./EosSharp/EosSharp.Tests/EosSharp.UnitTests.csproj --no-build --configuration Release --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: dotnet-results-${{ matrix.dotnet-version }}
+          path: TestResults-${{ matrix.dotnet-version }}
+        if: ${{ always() }} # Use always() to always run this step to publish test results when there are test failures
+        
