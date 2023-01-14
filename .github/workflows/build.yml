@@ -20,7 +20,7 @@ jobs:
       - name: Build
         run: dotnet build ./EosSharp/EosSharp/EosSharp.csproj --configuration Release --no-restore
       - name: Test
-        run: dotnet test ./EosSharp/EosSharp.Tests/EosSharp.UnitTests.csproj --configuration Release --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+        run: dotnet test ./EosSharp/EosSharp.Tests/EosSharp.UnitTests.csproj --no-build --configuration Release --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v3
         with:
