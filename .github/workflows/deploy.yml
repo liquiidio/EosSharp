@@ -74,6 +74,8 @@ jobs:
           mkdir $PKG_ROOT
           git mv EosSharp $PKG_ROOT
           git mv EosSharp.meta $PKG_ROOT
+          git mv Cryptography.ECDSA.dll $PKG_ROOT
+          git mv Cryptography.ECDSA.dll.meta $PKG_ROOT
           git mv LICENSE $PKG_ROOT
           git mv LICENSE.meta $PKG_ROOT
           git mv README.md $PKG_ROOT
@@ -107,8 +109,8 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1.12.0
         with:
-          tag: 1.0.2
-          name: Release 1.0.2
+          tag: 1.0.3
+          name: Release 1.0.3
           body: ${{ env.VERSION }}
           makeLatest: true
       - name: Download unity package
