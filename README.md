@@ -1,12 +1,79 @@
+<div align="center">
+ <img src="https://avatars.githubusercontent.com/u/82725791?s=200&v=4" align="center"
+     alt="Liquiid logo" width="280" height="300">
+</div>
+
+---
 # ACTIVELY MAINTAINED Version of Eos-Sharp
 (originally developed by SCATTER)
 
-# eos-sharp
+# EOS Sharp
 C# client library for EOSIO blockchains. The library is based on https://github.com/EOSIO/eosjs and MIT licensed.
 
-### Usage
+# Installation
 
-#### Configuration
+**_Requires Unity 2019.1+ with .NET 4.x+ Runtime_**
+
+This package can be included into your project by either:
+
+ 1. Installing the package via Unity's Package Manager (UPM) in the editor (recommended).
+ 2. Importing the .unitypackage which you can download.
+ 3. Manually add the files in this repo.
+ 4. Installing it via NuGet.
+ 
+---
+
+### 1. Installing via Unity Package Manager (UPM).
+In your Unity project:
+ 1. Open the Package Manager Window/Tab
+
+    ![image](https://user-images.githubusercontent.com/74650011/208429048-37e2277c-3e10-4794-97e7-3ec87f55f8c9.png)
+
+ 2. Click on + icon and then click on "Add Package From Git URL"
+
+    ![image](https://user-images.githubusercontent.com/74650011/208429298-76fe1101-95f3-4ab0-bbd5-f0a32a1cc652.png)
+
+ 3. Enter URL:  `https://github.com/liquiidio/EosSharp-Private.git#upm`
+   
+---
+### 2. Importing the Unity Package.
+Download the UnityPackage . Then in your Unity project:
+
+ 1. Open up the import a custom package window
+    
+    ![image](https://user-images.githubusercontent.com/74650011/208430044-caf91dd9-111e-4224-8441-95d116dbec3b.png)
+
+ 2. Navigate to where you downloaded the file and open it.
+    
+    ![image](https://user-images.githubusercontent.com/86061433/217219439-2fcba745-7173-4e96-8bcb-65810cedca6e.jpg)
+ 
+ 3. Check all the relevant files needed (if this is a first time import, just select ALL) and click on import.
+           
+     ![image](https://user-images.githubusercontent.com/86061433/217219778-19db7558-dcc1-4633-9966-085cf2b2724f.jpg)
+     
+---
+
+### 3. Install manually.
+Download this project there here . Then in your Unity project:
+
+ 1. Copy the sources from `EosSharp` into your `Assets` directory.
+
+---
+### 4. Install via NuGet (for Standard .NET users only - No Unity3D)
+
+#### .NET CLI
+
+`> dotnet add package Liquiid.io.EosSharp --version 1.0.1`
+
+#### Package Manager
+
+`PM> Install-Package Liquiid.io.EosSharp -Version 1.0.1`
+
+---
+
+# Usage
+
+### Configuration
 
 In order to interact with eos blockchain you need to create a new instance of the **Eos** class with a **EosConfigurator**.
 
