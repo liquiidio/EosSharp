@@ -4,9 +4,7 @@
 </div>
 
 ---
-# ACTIVELY MAINTAINED Version of Eos-Sharp
-(originally developed by SCATTER)
-
+**_ ACTIVELY MAINTAINED Version of Eos-Sharp(originally developed by SCATTER)_**
 ---
 
 # EOS Sharp
@@ -75,7 +73,7 @@ Download this project there here . Then in your Unity project:
 
 # Usage
 
-### Configuration
+## Configuration
 
 In order to interact with eos blockchain you need to create a new instance of the **Eos** class with a **EosConfigurator**.
 
