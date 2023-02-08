@@ -4,7 +4,7 @@
 </div>
 
 ---
-**_ ACTIVELY MAINTAINED Version of Eos-Sharp(originally developed by SCATTER)_**
+**_ACTIVELY MAINTAINED Version of Eos-Sharp(originally developed by SCATTER)_**
 ---
 
 # EOS Sharp
