@@ -17,7 +17,7 @@ C# client library for EOSIO blockchains. The library is based on https://github.
 This package can be included into your project by either:
 
  1. Installing the package via Unity's Package Manager (UPM) in the editor (recommended).
- 2. Importing the .unitypackage which you can download.
+ 2. Importing the .unitypackage which you can download [here](https://github.com/liquiidio/EosSharp-Private/releases/latest/download/eossharp.unitypackage).
  3. Manually add the files in this repo.
  4. Installing it via NuGet.
  
@@ -37,7 +37,11 @@ In your Unity project:
    
 ---
 ### 2. Importing the Unity Package.
-Download the UnityPackage . Then in your Unity project:
+
+Download the [UnityPackage here](https://github.com/liquiidio/EosSharp-Private/releases/latest/download/eossharp.unitypackage). 
+
+Then in your Unity project:
+
 
  1. Open up the import a custom package window
     
@@ -54,9 +58,13 @@ Download the UnityPackage . Then in your Unity project:
 ---
 
 ### 3. Install manually.
-Download this project there here . Then in your Unity project:
 
- 1. Copy the sources from `EosSharp` into your `Assets` directory.
+Download this [project here](https://github.com/liquiidio/EosSharp-Private/releases/latest).
+
+  * [zip](https://github.com/liquiidio/EosSharp-Private/archive/refs/tags/1.0.6.zip) 
+  * [tar.gz](https://github.com/liquiidio/EosSharp-Private/archive/refs/tags/1.0.6.tar.gz) 
+
+Then in your Unity project, copy the sources from `EosSharp` into your Unity `Assets` directory.
 
 ---
 ### 4. Install via NuGet (for Standard .NET users only - No Unity3D)
