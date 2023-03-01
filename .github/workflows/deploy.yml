@@ -57,7 +57,7 @@ jobs:
       - name: Pack
         run: dotnet pack ./EosSharp/EosSharp/EosSharp.csproj -p:PackageOutputPath=./artifacts --configuration Release -p:Version=${{ github.event.inputs.package_version }}
       - name: Upload package
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v1
         with:
           name: artifacts
           path: EosSharp/EosSharp/artifacts
@@ -177,11 +177,11 @@ jobs:
         run: |
           git branch -d upm &> /dev/null || echo upm branch not found # recreate the upm branch each time
           echo "********************** ROOT **********************"
-          ls .github
+          ls 
           git config --global user.name 'github-bot'
           git config --global user.email 'github-bot@users.noreply.github.com'
           git checkout -b upm                                               # create the upm branch and checkout the branch
-          git rm -r .github                                                 # remove github workflow files
+          git rm -r .github/workflows                                                 # remove github workflow files
           git commit -am "initial commit"
           echo "********************** ROOT **********************"
           ls
