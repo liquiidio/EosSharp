@@ -46,7 +46,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: master
+          ref: main
           fetch-depth: 0
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -55,12 +55,12 @@ jobs:
       - name: Determine version
         run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
       - name: Pack
-        run: dotnet pack ./EosSharp/EosSharp/EosSharp.csproj --output ./artifacts --configuration Release -p:Version=${{ github.event.inputs.package_version }}
+        run: dotnet pack ./EosSharp/EosSharp/EosSharp.csproj -p:PackageOutputPath=./artifacts --configuration Release -p:Version=${{ github.event.inputs.package_version }}
       - name: Upload package
         uses: actions/upload-artifact@v1
         with:
           name: artifacts
-          path: ./artifacts
+          path: EosSharp/artifacts
 
   pack-unitypackage:
     runs-on: ubuntu-20.04
