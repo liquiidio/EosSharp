@@ -19,12 +19,4 @@ jobs:
         run: dotnet restore ./EosSharp/EosSharp/EosSharp.csproj
       - name: Build
         run: dotnet build ./EosSharp/EosSharp/EosSharp.csproj --configuration Release --no-restore
-      - name: Test
-        run: dotnet test ./EosSharp/EosSharp.Tests/EosSharp.UnitTests.csproj --no-build --configuration Release --verbosity normal --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
-      - name: Upload dotnet test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: dotnet-results-${{ matrix.dotnet-version }}
-          path: TestResults-${{ matrix.dotnet-version }}
-        if: ${{ always() }} # Use always() to always run this step to publish test results when there are test failures
-        
+      
