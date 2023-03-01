@@ -55,12 +55,12 @@ jobs:
       - name: Determine version
         run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
       - name: Pack
-        run: dotnet pack -p:PackageOutputPath=./artifacts --configuration Release -p:Version=${{ github.event.inputs.package_version }}
+        run: dotnet pack ./EosSharp/EosSharp/EosSharp.csproj -p:PackageOutputPath=./artifacts --configuration Release -p:Version=${{ github.event.inputs.package_version }}
       - name: Upload package
         uses: actions/upload-artifact@v1
         with:
           name: artifacts
-          path: EosSharp/artifacts
+          path: EosSharp/EosSharp/artifacts
 
   pack-unitypackage:
     runs-on: ubuntu-20.04
