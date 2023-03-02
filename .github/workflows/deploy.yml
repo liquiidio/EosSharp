@@ -182,7 +182,7 @@ jobs:
           git config --global user.email 'github-bot@users.noreply.github.com'
           git checkout -b upm                                               # create the upm branch and checkout the branch
           git rm -r .github || true                                                # remove github workflow files
-          git commit -am "initial commit"
+          git commit -am "initial commit" || true
           echo "********************** ROOT **********************"
           ls
           git push -u origin upm --force                                    # commit the branch
