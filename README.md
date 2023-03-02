@@ -9,6 +9,7 @@
 
 [![Build](https://github.com/liquiidio/EosSharp-Private/actions/workflows/build.yml/badge.svg)](https://github.com/liquiidio/EosSharp-Private/actions/workflows/build.yml)
 [![Test](https://github.com/liquiidio/EosSharp-Private/actions/workflows/test.yml/badge.svg)](https://github.com/liquiidio/EosSharp-Private/actions/workflows/test.yml)
+[![Build documents](https://github.com/liquiidio/EosSharp-Private/actions/workflows/docs.yml/badge.svg)](https://github.com/liquiidio/EosSharp-Private/actions/workflows/docs.yml)
 [![Deploy](https://github.com/liquiidio/EosSharp-Private/actions/workflows/deploy.yml/badge.svg)](https://github.com/liquiidio/EosSharp-Private/actions/workflows/deploy.yml)
 # EOS Sharp
 C# client library for EOSIO blockchains. The library is based on https://github.com/EOSIO/eosjs and MIT licensed.
