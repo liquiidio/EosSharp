@@ -12,6 +12,7 @@
 [![Build documents](https://github.com/liquiidio/EosSharp-Private/actions/workflows/docs.yml/badge.svg)](https://github.com/liquiidio/EosSharp-Private/actions/workflows/docs.yml)
 [![Deploy](https://github.com/liquiidio/EosSharp-Private/actions/workflows/deploy.yml/badge.svg)](https://github.com/liquiidio/EosSharp-Private/actions/workflows/deploy.yml)	
 </div>	
+
 ---
 **_ACTIVELY MAINTAINED Version of Eos-Sharp(originally developed by SCATTER)_**
 ---
